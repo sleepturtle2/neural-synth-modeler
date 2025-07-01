@@ -2,5 +2,9 @@
 .DS_Store
 .vscode/*
 syntheon/data/*
+*.rpp-bak
+*.rpp 
+*.RPP 
+*.vital 
 
 
