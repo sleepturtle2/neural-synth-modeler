@@ -129,15 +129,15 @@ class WTSv2(nn.Module):
         self.register_buffer("block_size", torch.tensor(block_size))
 
         # feature extractors
-        self.encoder = mlp(30, hidden_size, 3)
-        self.layer_norm = nn.LayerNorm(30)
-        self.gru_mfcc = nn.GRU(30, 512, batch_first=True)
-        self.mlp_mfcc = nn.Linear(512, 16)
+        self.encoder = mlp(30, hidden_size, 3) # mfcc size = 30
+        self.layer_norm = nn.LayerNorm(30) # mfcc size = 30
+        self.gru_mfcc = nn.GRU(30, 512, batch_first=True) # mfcc size = 30
+        self.mlp_mfcc = nn.Linear(512, 16) # mfcc size = 16
 
-        self.in_mlps = nn.ModuleList([mlp(1, hidden_size, 3),
-                                      mlp(1, hidden_size, 3),
-                                      mlp(16, hidden_size, 3)])
-        self.gru = gru(3, hidden_size)
+        self.in_mlps = nn.ModuleList([mlp(1, hidden_size, 3), # pitch has 1 feature
+                                      mlp(1, hidden_size, 3), # loudness has 1 feature
+                                      mlp(16, hidden_size, 3)]) # mfcc has 16 features
+        self.gru = gru(3, hidden_size) 
         self.out_mlp = mlp(hidden_size * 4, hidden_size, 3)
 
         self.loudness_mlp = nn.Sequential(
@@ -216,7 +216,7 @@ class WTSv2(nn.Module):
         mfcc = self.gru_mfcc(mfcc)[0]
         mfcc = self.mlp_mfcc(mfcc)
 
-        # use image resize to align dimensions, ddsp also do this...
+        # use image resize to align dimensions, ddsp also does this...
         mfcc = Resize(size=(self.duration_secs * 100, 16))(mfcc)
 
         hidden = torch.cat([

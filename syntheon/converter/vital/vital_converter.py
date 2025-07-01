@@ -39,7 +39,7 @@ class VitalConverter(SynthConverter):
             # decode custom part
             self.dict[CUSTOM_KEYS] = {}
             self.dict[CUSTOM_KEYS]["wavetables"] = []
-            for idx in range(len(N_WAVETABLES)):
+            for idx in range(N_WAVETABLES):
                 wavetable_str = self.dict["settings"]["wavetables"][idx]["groups"][0]["components"][0]["keyframes"][0]["wave_data"]
                 wavetable_name = self.dict["settings"]["wavetables"][idx]["name"]
                 wavetable_osc_level = self.dict["settings"]["osc_{}_level".format(idx + 1)]
