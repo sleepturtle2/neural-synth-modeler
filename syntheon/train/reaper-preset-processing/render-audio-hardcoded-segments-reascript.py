@@ -202,30 +202,96 @@ else:
 
     # --- REMOVE FROM REMAINING MAP ---
     REMAINING_MAP_PATH = "/Users/sayantanm/code/neural-synth-modeler/syntheon/data/preset_render_remaining_map.json"
-    # Try to remove the rendered preset's id from the remaining map
+    # Try to remove the rendered preset's id from the remaining map (nested structure)
     try:
         if os.path.exists(REMAINING_MAP_PATH):
             with open(REMAINING_MAP_PATH, 'r') as f:
-                remaining_ids = json.load(f)
-            # Try to infer the preset id from the cleaned_name or preset_num
-            preset_id = None
-            # If selected by number, use that
-            try:
-                preset_id = str(int(user_input.strip()))
-            except Exception:
-                # Otherwise, try to match cleaned_name to map
-                # Load preset map
-                if os.path.exists(PRESET_MAP_PATH):
-                    with open(PRESET_MAP_PATH, 'r') as f:
-                        preset_map = json.load(f)
+                remaining_map = json.load(f)
+            # Load preset map to get osc and style
+            if os.path.exists(PRESET_MAP_PATH):
+                with open(PRESET_MAP_PATH, 'r') as f:
+                    preset_map = json.load(f)
+                # Determine preset_id
+                preset_id = None
+                try:
+                    preset_id = str(int(user_input.strip()))
+                except Exception:
                     for idx, entry in preset_map.items():
                         if entry['cleaned_name'] == preset_name:
                             preset_id = idx
                             break
-            if preset_id and preset_id in remaining_ids:
-                remaining_ids.remove(preset_id)
-                with open(REMAINING_MAP_PATH, 'w') as f:
-                    json.dump(remaining_ids, f, indent=2)
-                RPR_ShowConsoleMsg(f"Removed preset id {preset_id} from remaining map.\n")
+                if preset_id:
+                    # Find osc and style for this preset
+                    entry = preset_map.get(preset_id, {})
+                    osc_count = None
+                    preset_style = None
+                    if entry:
+                        # Try to infer osc key
+                        osc_count = None
+                        try:
+                            from syntheon.train.vital.vital_preprocessor import count_oscillators
+                        except ImportError:
+                            pass
+                        src_file = entry.get('full_path', None)
+                        if src_file:
+                            try:
+                                osc_count = count_oscillators(src_file)
+                            except Exception:
+                                osc_count = None
+                        if osc_count is None:
+                            osc_key = 'unknown_osc'
+                        else:
+                            osc_key = f'has_{osc_count}_osc'
+                        preset_style = entry.get('preset_style', '').strip() or 'unknown_style'
+                        # Remove from nested map
+                        if osc_key in remaining_map and preset_style in remaining_map[osc_key]:
+                            if preset_id in remaining_map[osc_key][preset_style]:
+                                remaining_map[osc_key][preset_style].remove(preset_id)
+                                RPR_ShowConsoleMsg(f"Removed preset id {preset_id} from remaining map under {osc_key}/{preset_style}.\n")
+                                # Clean up empty lists/dicts
+                                if not remaining_map[osc_key][preset_style]:
+                                    del remaining_map[osc_key][preset_style]
+                                if not remaining_map[osc_key]:
+                                    del remaining_map[osc_key]
+                                with open(REMAINING_MAP_PATH, 'w') as f:
+                                    json.dump(remaining_map, f, indent=2)
+                            else:
+                                RPR_ShowConsoleMsg(f"Preset id {preset_id} not found in remaining map under {osc_key}/{preset_style}.\n")
+                        else:
+                            RPR_ShowConsoleMsg(f"Preset id {preset_id} not found in remaining map (osc/style missing).\n")
+                    # Fallback: search all osc/style for the id and remove if found
+                    found = False
+                    for osc_key in list(remaining_map.keys()):
+                        for style_key in list(remaining_map[osc_key].keys()):
+                            if preset_id in remaining_map[osc_key][style_key]:
+                                remaining_map[osc_key][style_key].remove(preset_id)
+                                found = True
+                                RPR_ShowConsoleMsg(f"Fallback: Removed preset id {preset_id} from {osc_key}/{style_key}.\n")
+                                # Clean up empty lists/dicts
+                                if not remaining_map[osc_key][style_key]:
+                                    del remaining_map[osc_key][style_key]
+                                if not remaining_map[osc_key]:
+                                    del remaining_map[osc_key]
+                                with open(REMAINING_MAP_PATH, 'w') as f:
+                                    json.dump(remaining_map, f, indent=2)
+                                break
+                        if found:
+                            break
+                    if not found:
+                        RPR_ShowConsoleMsg(f"Preset id {preset_id} could not be found in any osc/style category.\n")
+            # After removal, reload the map and print the new total unrendered count
+            with open(REMAINING_MAP_PATH, 'r') as f:
+                updated_remaining_map = json.load(f)
+            new_unrendered = sum(len(ids) for osc in updated_remaining_map.values() for ids in osc.values())
+            # Count rendered
+            render_dir = "/Users/sayantanm/code/neural-synth-modeler/syntheon/data/vital_preset_audio"
+            rendered_count = 0
+            if os.path.exists(render_dir):
+                rendered_count = len([d for d in os.listdir(render_dir) if os.path.isdir(os.path.join(render_dir, d))])
+            # Count total in preset map
+            total_count = len(preset_map)
+            RPR_ShowConsoleMsg(f"After removal: Unrendered: {new_unrendered}, Rendered: {rendered_count}, Total: {total_count}\n")
+            if rendered_count + new_unrendered != total_count:
+                RPR_ShowConsoleMsg("ERROR: Rendered + Unrendered does not equal total presets!\n")
     except Exception as e:
         RPR_ShowConsoleMsg(f"Error updating remaining map: {e}\n")

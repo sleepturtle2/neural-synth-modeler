@@ -174,7 +174,7 @@ def select_preset_from_map(map_path=PRESET_MAP_PATH):
 def check_unrendered_presets(map_path=PRESET_MAP_PATH, render_dir=None, output_path=None):
     """
     Checks which presets in the preset map have not been rendered yet (i.e., do not have a corresponding directory in data/vital_preset_audio).
-    Stores the list of remaining preset ids in preset_render_remaining_map.json.
+    Stores the list of remaining preset ids in preset_render_remaining_map.json, categorized by oscillator count and preset style.
     Also checks that rendered + remaining = total presets in the map.
     """
     if render_dir is None:
@@ -198,24 +198,49 @@ def check_unrendered_presets(map_path=PRESET_MAP_PATH, render_dir=None, output_p
     # Find which ids have been rendered (by matching preset_name or idx)
     rendered_ids = set()
     for idx, entry in preset_map.items():
-        # Rendered dir could be named by cleaned_name or idx or actual_name
         cleaned_name = entry.get('cleaned_name', '')
         actual_name = entry.get('actual_name', '')
-        # Check for exact match with cleaned_name, actual_name, or idx
         if cleaned_name in rendered_dirs or actual_name in rendered_dirs or idx in rendered_dirs:
             rendered_ids.add(idx)
         else:
-            # Also check for partial match (e.g., subdir starts with idx-)
             for d in rendered_dirs:
                 if d.startswith(f"{idx}-"):
                     rendered_ids.add(idx)
                     break
     remaining_ids = sorted(list(all_ids - rendered_ids), key=lambda x: int(x))
 
-    # Save remaining ids to file
+    # Categorize remaining by osc count and preset style
+    categorized = {}
+    for idx in remaining_ids:
+        entry = preset_map[idx]
+        src_file = entry['full_path']
+        osc_count = count_oscillators(src_file)
+        if osc_count is None:
+            osc_key = 'unknown_osc'
+        else:
+            osc_key = f'has_{osc_count}_osc'
+        # Normalize style: lowercase, strip, use 'unknown_style' if empty
+        preset_style = entry.get('preset_style', '')
+        preset_style = preset_style.strip().lower() if preset_style.strip() else 'unknown_style'
+        if osc_key not in categorized:
+            categorized[osc_key] = {}
+        if preset_style not in categorized[osc_key]:
+            categorized[osc_key][preset_style] = []
+        categorized[osc_key][preset_style].append(idx)
+
+    # Count total unrendered
+    total_unrendered = sum(len(ids) for osc in categorized.values() for ids in osc.values())
+    total_rendered = len(all_ids) - total_unrendered
+    summary = {
+        'total_unrendered': total_unrendered,
+        'total_rendered': total_rendered,
+        'total_presets': len(all_ids)
+    }
+    # Add summary as a key in the main output JSON
+    categorized['_summary'] = summary
     with open(output_path, 'w') as f:
-        json.dump(remaining_ids, f, indent=2)
-    print(f"Wrote {len(remaining_ids)} unrendered preset ids to {output_path}")
+        json.dump(categorized, f, indent=2)
+    print(f"Wrote categorized unrendered preset ids and summary to {output_path}")
 
     # Consistency check
     total = len(all_ids)
