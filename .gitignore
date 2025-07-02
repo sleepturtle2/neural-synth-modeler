@@ -6,5 +6,4 @@ syntheon/data/*
 *.rpp 
 *.RPP 
 *.vital 
-
-
+*.pyc

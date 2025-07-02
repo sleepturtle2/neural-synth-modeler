@@ -1,0 +1,81 @@
+Metadata-Version: 2.4
+Name: syntheon
+Version: 0.1.0
+Summary: Parameter inference of music synthesizers to simplify sound design process.
+Home-page: https://github.com/gudgud96/syntheon
+Author: Hao Hao Tan
+Author-email: helloharry66@gmail.com
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown; charset=UTF-8
+License-File: LICENSE
+Requires-Dist: librosa==0.9.1
+Requires-Dist: torch==1.12.1
+Requires-Dist: torchvision==0.13.1
+Requires-Dist: torchaudio==0.12.1
+Requires-Dist: pyyaml
+Requires-Dist: mido
+Requires-Dist: nnAudio==0.3.1
+Requires-Dist: numpy
+Requires-Dist: bitstruct
+Requires-Dist: torchcrepeV2
+Dynamic: license-file
+
+![syntheon_logo](docs/syntheon-logo.png)
+
+# Syntheon
+
+Syntheon - [Pantheon](https://en.wikipedia.org/wiki/Pantheon,_Rome) for music synthesizers. 
+
+Syntheon provides **parameter inference** for music synthesizers using *deep learning models*. Given an audio sample, Syntheon infers the best parameter preset for a given synthesizer that can recreate the audio sample. 
+
+**Check out [this presentation](https://docs.google.com/presentation/d/1PA4fom6QvCW_YG8L0MMVumrAluljcymndNlaK2HW5t0/edit?usp=sharing) on the recent advances of synth parameter inference.
+
+For now: 
+- :heavy_check_mark: [Vital](https://vital.audio/) is supported
+- [Dexed](https://asb2m10.github.io/dexed/) is work-in-progress
+
+Try it out on [our Colab notebook demo](https://colab.research.google.com/github/gudgud96/syntheon/blob/main/Syntheon_Demo.ipynb). 
+
+## Installation
+
+```
+python3 -m pip install syntheon
+```
+
+## Usage
+
+```python
+from syntheon import infer_params
+
+output_params_file, eval_dict = infer_params(
+    "your_audio.wav", 
+    "vital", 
+    enable_eval=True
+)
+```
+
+## Testing
+
+```
+python3 -m pytest
+```
+
+## Structure
+
+For each synthesizer, we need to define:
+
+- **converter** for preset format conversion: 
+    - `serializeToDict`: convert preset file to a Python dictionary to be handled by inferencer
+    - `parseToPluginFile`: convert Python dictionary back to preset file, to be loaded by the synthesizer
+
+- **inferencer** for model inference:
+    - `convert`: define the workflow of `load_model` -> `inference` -> `convert_to_preset`
+
+## Contribution
+
+Syntheon is actively under development, and contributions are welcomed. Some TODOs we have in mind include:
+
+- Replicating state-of-the-art approaches
+- Improving current model performance
+- Incorporating new synthesizers 
+- Code refactoring 😅
