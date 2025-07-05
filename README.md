@@ -1,59 +1,56 @@
 ![syntheon_logo](docs/syntheon-logo.png)
 
-# Syntheon
+# Neural Synth Modeler
 
-Syntheon - [Pantheon](https://en.wikipedia.org/wiki/Pantheon,_Rome) for music synthesizers. 
+Neural Synth Modeler transforms audio inputs into synthesizer presets using deep learning. Given an audio sample, the model infers the optimal parameter settings for synthesizers to recreate that audio.
 
-Syntheon provides **parameter inference** for music synthesizers using *deep learning models*. Given an audio sample, Syntheon infers the best parameter preset for a given synthesizer that can recreate the audio sample. 
+**Currently Supported:**
+- [Vital](https://vital.audio/) - Wavetable synthesizer
 
-**Check out [this presentation](https://docs.google.com/presentation/d/1PA4fom6QvCW_YG8L0MMVumrAluljcymndNlaK2HW5t0/edit?usp=sharing) on the recent advances of synth parameter inference.
+## Model Architecture
 
-For now: 
-- :heavy_check_mark: [Vital](https://vital.audio/) is supported
-- [Dexed](https://asb2m10.github.io/dexed/) is work-in-progress
+The core model (`WTSv2`) is a neural wavetable synthesizer that learns to generate synthesizer parameters from audio features. Here's the detailed architecture:
 
-Try it out on [our Colab notebook demo](https://colab.research.google.com/github/gudgud96/syntheon/blob/main/Syntheon_Demo.ipynb). 
+### Feature Processing Pipeline
+![Feature Processing Pipeline](docs/feature-processing.svg)
 
-## Installation
 
-```
-python3 -m pip install syntheon
-```
 
-## Usage
+### Wavetable Generation & Processing
 
-```python
-from syntheon import infer_params
+![Wavetable Generation & Processing](docs/wavetable-generation-processing.svg)
 
-output_params_file, eval_dict = infer_params(
-    "your_audio.wav", 
-    "vital", 
-    enable_eval=True
-)
-```
 
-## Testing
+### ADSR Envelope Generation
+![ADSR Envelope Generation](docs/adsr.svg)
 
-```
-python3 -m pytest
-```
 
-## Structure
+### Complete Synthesis Pipeline
 
-For each synthesizer, we need to define:
+![Synthesis Pipeline](docs/synthesis-pipeline.svg)
+
+
+## MLOps Workflow
+
+Our continuous training and deployment pipeline:
+
+![MLOps Workflow](docs/mlops_workflow.svg)
+
+## Demo
+
+Try it out on [our Colab notebook demo](https://colab.research.google.com/github/gudgud96/neural-synth-modeler/blob/main/Syntheon_Demo.ipynb).
+
+
+
+
+## Project Structure
+
+For each synthesizer, we define:
 
 - **converter** for preset format conversion: 
-    - `serializeToDict`: convert preset file to a Python dictionary to be handled by inferencer
-    - `parseToPluginFile`: convert Python dictionary back to preset file, to be loaded by the synthesizer
+    - `serializeToDict`: convert preset file to Python dictionary
+    - `parseToPluginFile`: convert dictionary back to preset file
 
 - **inferencer** for model inference:
-    - `convert`: define the workflow of `load_model` -> `inference` -> `convert_to_preset`
+    - `convert`: workflow of `load_model` -> `inference` -> `convert_to_preset`
 
-## Contribution
-
-Syntheon is actively under development, and contributions are welcomed. Some TODOs we have in mind include:
-
-- Replicating state-of-the-art approaches
-- Improving current model performance
-- Incorporating new synthesizers 
-- Code refactoring 😅

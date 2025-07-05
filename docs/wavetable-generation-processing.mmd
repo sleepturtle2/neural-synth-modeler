@@ -1,0 +1,15 @@
+flowchart TD
+    A[Audio Signal] --> B[Conv1D Layers]
+    B --> C[Tanh Activation]
+    C --> D[Linear Projection]
+    D --> E[512-dim Wavetable]
+    
+    E --> F[Smoothing Coefficient MLP]
+    F --> G[Sigmoid Activation]
+    G --> H[Gaussian Smoothing Kernel]
+    E --> H
+    H --> I[Smoothed Wavetables]
+    
+    I --> J[Attention Mechanism]
+    J --> K[Softmax Selection]
+    K --> L[Selected Wavetables]

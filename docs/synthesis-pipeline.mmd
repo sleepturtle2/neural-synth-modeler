@@ -1,0 +1,16 @@
+flowchart TD
+    A[Pitch + Loudness] --> B[Upsample to Block Size]
+    C[Generated Wavetables] --> D[Wavetable Synth]
+    B --> D
+    D --> E[Harmonic Signal]
+    
+    F[Hidden Features] --> G[Noise Parameters MLP]
+    G --> H[Impulse Response]
+    H --> I[Random Noise Generation]
+    I --> J[FFT Convolution]
+    J --> K[Noise Signal]
+    
+    E --> L[Signal Addition]
+    K --> L
+    L --> M[ADSR Envelope Application]
+    M --> N[Final Audio Output]

@@ -1,0 +1,15 @@
+flowchart TD
+    A["Developer pushes code or new data"] --> B["CI/CD Pipeline"]
+    B --> C["Run Unit/Integration Tests"]
+    C --> D["Train Model"]
+    D --> E["Evaluate Model"]
+    E -- "If metrics OK" --> F["Register Model in BentoML Model Store"]
+    F --> G["Build BentoML Service"]
+    G --> H["Containerize with Docker"]
+    H --> I["Push Docker Image to Registry"]
+    I --> J["Deploy to Production (Cloud/VM)"]
+    J --> K["Serve Model via BentoML API"]
+    K --> L["Monitor Model</br> (metrics, drift, logs)"]
+    L -- "If retrain needed" --> D
+    E -- "If metrics NOT OK" --> M["Alert/Manual Review"]
+    M --> A

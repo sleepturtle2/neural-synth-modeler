@@ -1,0 +1,21 @@
+flowchart TD
+    A[Loudness Features] --> B[Attack GRU]
+    A --> C[Decay GRU]
+    A --> D[Sustain GRU]
+    
+    B --> E[Concatenate Bidirectional Outputs]
+    C --> F[Concatenate Bidirectional Outputs]
+    D --> G[Concatenate Bidirectional Outputs]
+    
+    E --> H[Attack Head MLP]
+    F --> I[Decay Head MLP]
+    G --> J[Sustain Head MLP]
+    
+    H --> K[Attack Time 0-2s]
+    I --> L[Decay Time 0-2s]
+    J --> M[Sustain Level 0-1]
+    
+    K --> N[ADSR Envelope Generator]
+    L --> N
+    M --> N
+    N --> O[Amplitude Shaping]

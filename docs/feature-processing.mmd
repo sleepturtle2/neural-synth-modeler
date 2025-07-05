@@ -1,0 +1,22 @@
+flowchart TD
+    A[Audio Input] --> B[MFCC Features]
+    A --> C[Pitch Extraction]
+    A --> D[Loudness Analysis]
+    
+    B --> E[Layer Normalization]
+    E --> F[GRU Encoder]
+    F --> G[MLP Projection]
+    G --> H[16-dim Features]
+    
+    C --> I[Pitch MLP]
+    D --> J[Loudness MLP]
+    H --> K[MFCC MLP]
+    
+    I --> L[Feature Concatenation]
+    J --> L
+    K --> L
+    
+    L --> M[GRU Processing]
+    M --> N[Concatenate GRU Output + Original Features]
+    N --> O[Output MLP]
+    O --> P[Hidden Features]
