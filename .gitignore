@@ -2,8 +2,10 @@
 .DS_Store
 .vscode/*
 syntheon/data/*
+neural_synth_modeler/data/*
 *.rpp-bak
 *.rpp 
 *.RPP 
 *.vital 
 *.pyc
+*git-bak
