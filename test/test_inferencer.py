@@ -1,6 +1,6 @@
 import os
 import glob
-from syntheon import infer_params
+from neural_synth_modeler import infer_params
 
 
 # def test_dexed_inferencer():

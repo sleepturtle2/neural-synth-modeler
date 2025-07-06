@@ -1,2 +1,0 @@
-from neural_synth_modeler.converter.converter import SynthConverter
-from neural_synth_modeler.converter.vital.vital_constants import N_WAVETABLES, CUSTOM_KEYS
