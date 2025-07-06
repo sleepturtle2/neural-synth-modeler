@@ -229,7 +229,7 @@ else:
                         # Try to infer osc key
                         osc_count = None
                         try:
-                            from syntheon.train.vital.vital_preprocessor import count_oscillators
+                            from neural_synth_modeler.train.vital.vital_preprocessor import count_oscillators
                         except ImportError:
                             pass
                         src_file = entry.get('full_path', None)

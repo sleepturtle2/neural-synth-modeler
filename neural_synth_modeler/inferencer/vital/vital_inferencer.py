@@ -1,6 +1,7 @@
 """
 Vital inferencer.
 """
+import os
 from neural_synth_modeler.inferencer.inferencer import Inferencer, InferenceInput, InferenceOutput
 from neural_synth_modeler.inferencer.vital.models.model import WTSv2
 from neural_synth_modeler.inferencer.vital.models.preprocessor import *

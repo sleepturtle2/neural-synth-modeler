@@ -1,12 +1,12 @@
 """
 Diff-WTS model. Main adapted from https://github.com/acids-ircam/ddsp_pytorch.
 """
-from syntheon.inferencer.vital.models.wavetable_synth import WavetableSynthV2
+from .wavetable_synth import WavetableSynthV2
 import torch
 import torch.nn as nn
-from syntheon.inferencer.vital.models.core import mlp, gru, scale_function, remove_above_nyquist, upsample
-from syntheon.inferencer.vital.models.core import amp_to_impulse_response, fft_convolve
-from syntheon.inferencer.vital.models.adsr_envelope import *
+from .core import mlp, gru, scale_function, remove_above_nyquist, upsample
+from .core import amp_to_impulse_response, fft_convolve
+from .adsr_envelope import *
 import numpy as np
 from torchvision.transforms import Resize
 from time import time

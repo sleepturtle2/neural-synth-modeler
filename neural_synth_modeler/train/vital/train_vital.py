@@ -2,9 +2,9 @@ import os
 import yaml
 import torch
 from torch.utils.data import DataLoader, Dataset, random_split
-from syntheon.inferencer.vital.models.model import WTSv2
-from syntheon.inferencer.vital.models.preprocessor import spec, sr, n_mfcc
-from syntheon.inferencer.vital.models.core import multiscale_fft
+from neural_synth_modeler.inferencer.vital.models.model import WTSv2
+from neural_synth_modeler.inferencer.vital.models.preprocessor import spec, sr, n_mfcc
+from neural_synth_modeler.inferencer.vital.models.core import multiscale_fft
 import numpy as np
 import librosa
 from tqdm import tqdm
@@ -13,7 +13,7 @@ import datetime
 # 1. Load config
 # Get project root (2 levels up from this script)
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
-config_path = os.path.join(project_root, "syntheon/inferencer/vital/config.yaml")
+config_path = os.path.join(project_root, "neural_synth_modeler/inferencer/vital/config.yaml")
 with open(config_path, "r") as f:
     config = yaml.safe_load(f)
 
@@ -68,7 +68,7 @@ model = WTSv2(
 ).to(device)
 
 # 5. Load checkpoint if exists
-checkpoint_path = os.path.join(project_root, "syntheon/inferencer/vital/checkpoints/model.pt")
+checkpoint_path = os.path.join(project_root, "neural_synth_modeler/inferencer/vital/checkpoints/model.pt")
 if os.path.exists(checkpoint_path):
     model.load_state_dict(torch.load(checkpoint_path, map_location=device))
     print(f"Loaded checkpoint weights from {checkpoint_path}!")
@@ -117,5 +117,5 @@ for epoch in range(epochs):
 
     # Save checkpoint with timestamp
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    save_path = os.path.join(project_root, f"syntheon/inferencer/vital/checkpoints/model_epoch{epoch+1}_{timestamp}.pt")
+    save_path = os.path.join(project_root, f"neural_synth_modeler/inferencer/vital/checkpoints/model_epoch{epoch+1}_{timestamp}.pt")
     torch.save(model.state_dict(), save_path) 

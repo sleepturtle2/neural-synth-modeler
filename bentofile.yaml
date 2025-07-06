@@ -1,0 +1,27 @@
+service: "neural_synth_modeler/service.py:NeuralSynthModelerService"
+labels:
+  owner: "neural-synth-modeler"
+  project: "neural-synth-modeler"
+include:
+  - "neural_synth_modeler/**/*.py"
+  - "neural_synth_modeler/**/*.yaml"
+  - "neural_synth_modeler/**/*.pt"
+  - "neural_synth_modeler/**/*.pth"
+  - "neural_synth_modeler/**/*.syx"
+exclude:
+  - "**/__pycache__"
+  - "**/*.pyc"
+  - "**/.git"
+  - "**/test"
+  - "**/*.ipynb"
+python:
+  packages:
+    - torch
+    - torchaudio
+    - numpy
+    - scipy
+    - librosa
+    - requests
+    - pyyaml
+    - h5py
+    - soundfile 
