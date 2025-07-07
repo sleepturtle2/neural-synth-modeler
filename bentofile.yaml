@@ -8,6 +8,7 @@ include:
   - "neural_synth_modeler/**/*.pt"
   - "neural_synth_modeler/**/*.pth"
   - "neural_synth_modeler/**/*.syx"
+  - "neural_synth_modeler/**/init.vital"
 exclude:
   - "**/__pycache__"
   - "**/*.pyc"
