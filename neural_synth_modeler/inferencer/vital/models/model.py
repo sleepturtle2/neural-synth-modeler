@@ -310,7 +310,16 @@ class WTSv2(nn.Module):
         adsr = adsr.unsqueeze(-1)
         adsr = upsample(adsr, self.block_size).squeeze(-1)   
 
-        adsr = adsr[:, :signal.shape[1]]
+        # Ensure adsr and signal have the same length
+        if adsr.shape[1] != signal.shape[1]:
+            print(f"ADSR shape: {adsr.shape}, Signal shape: {signal.shape}")
+            if adsr.shape[1] < signal.shape[1]:
+                # Pad adsr to match signal length
+                pad_length = signal.shape[1] - adsr.shape[1]
+                adsr = torch.cat([adsr, adsr[:, -1].unsqueeze(-1).repeat(1, pad_length)], dim=-1)
+            else:
+                # Truncate adsr to match signal length
+                adsr = adsr[:, :signal.shape[1]]
 
         final_signal = signal.squeeze() * adsr
 

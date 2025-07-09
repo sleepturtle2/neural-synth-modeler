@@ -124,7 +124,7 @@ def monotonize_pitch(times, onset_frames, pitch):
     
 
 def preprocess(f, sampling_rate, block_size, signal_length=-1, oneshot=True):
-    x, sr = librosa.load(f, sampling_rate)
+    x, sr = librosa.load(f, sr=sampling_rate)
     if signal_length == -1:     # full length
         signal_length = len(x)
     else:
