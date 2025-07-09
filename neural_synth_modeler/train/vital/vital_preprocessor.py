@@ -26,7 +26,7 @@ def count_oscillators(vital_path):
 
 def import_vital_presets_flat(src_dir, dest_dir, map_path=PRESET_MAP_PATH):
     """
-    Recursively copy all .vital files from src_dir to syntheon/data/vital_presets/has_x_osc.
+    Recursively copy all .vital files from src_dir to neural-synth-modeler/data/vital_presets/has_x_osc.
     While copying, use the idx-cleaned_name from the preset map for filenames.
     """
     # Load the preset map
@@ -180,7 +180,7 @@ def check_unrendered_presets(map_path=PRESET_MAP_PATH, render_dir=None, output_p
     if render_dir is None:
         script_dir = os.path.dirname(os.path.realpath(__file__))
         project_root = os.path.abspath(os.path.join(script_dir, '../../..'))
-        render_dir = os.path.join(project_root, 'syntheon', 'data', 'vital_preset_audio')
+        render_dir = os.path.join(project_root, 'neural-synth-modeler', 'data', 'vital_preset_audio')
     if output_path is None:
         output_path = os.path.join(os.path.dirname(map_path), 'preset_render_remaining_map.json')
 
@@ -254,7 +254,7 @@ if __name__ == "__main__":
     source_vital_dir = "/Users/sayantanm/Music/Vital"  
     script_dir = os.path.dirname(os.path.realpath(__file__))
     project_root = os.path.abspath(os.path.join(script_dir, '../../..'))
-    dest_dir = os.path.join(project_root, 'syntheon', 'data', 'vital_presets')
+    dest_dir = os.path.join(project_root, 'neural-synth-modeler', 'data', 'vital_presets')
 
     # Call build_and_save_preset_map to update the map if new entries are found
     build_and_save_preset_map(source_vital_dir, PRESET_MAP_PATH)

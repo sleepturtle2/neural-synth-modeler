@@ -5,6 +5,7 @@ setup.cfg
 setup.py
 neural_synth_modeler/__init__.py
 neural_synth_modeler/main.py
+neural_synth_modeler/service.py
 neural_synth_modeler/version.py
 neural_synth_modeler.egg-info/PKG-INFO
 neural_synth_modeler.egg-info/SOURCES.txt
