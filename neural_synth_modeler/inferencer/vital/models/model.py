@@ -320,6 +320,8 @@ class WTSv2(nn.Module):
             else:
                 # Truncate adsr to match signal length
                 adsr = adsr[:, :signal.shape[1]]
+        else:
+            adsr = adsr[:, :signal.shape[1]]
 
         final_signal = signal.squeeze() * adsr
 

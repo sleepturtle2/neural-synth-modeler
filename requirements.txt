@@ -3,8 +3,9 @@ torch==1.12.1
 torchvision==0.13.1
 torchaudio==0.12.1
 pyyaml
-mido 
+mido==1.3.3
 nnAudio==0.3.1 
-numpy 
-bitstruct 
-torchcrepeV2
+numpy==1.26.4
+bitstruct==8.21.0
+torchcrepeV2==0.2.0
+bentoml==1.4.17

@@ -2,7 +2,7 @@ Metadata-Version: 2.4
 Name: neural-synth-modeler
 Version: 0.1.0
 Summary: Parameter inference of music synthesizers to simplify sound design process.
-Home-page: https://github.com/gudgud96/neural-synth-modeler
+Home-page: https://github.com/sleepturtle2/neural-synth-modeler
 Author: Sayantan Mukherjee
 Author-email: sayantan.mukh98@gmail.com
 Requires-Python: >=3.7

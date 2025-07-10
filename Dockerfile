@@ -13,13 +13,14 @@ RUN pip install -r requirements.txt
 # Copy the rest of the code
 COPY . /app
 
-# Install your package in editable mode (if needed)
+# Install your package in editable mode
 RUN pip install -e .
 
 # Expose BentoML port
 EXPOSE 3000
 
-# Build the Bento
+# Change to the neural_synth_modeler directory and build the Bento
+WORKDIR /app/neural_synth_modeler
 RUN bentoml build
 
 # Start the BentoML service

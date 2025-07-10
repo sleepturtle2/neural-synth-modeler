@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Union
 from bentoml.validators import ContentType
 import bentoml
 from neural_synth_modeler.main import infer_params
@@ -7,6 +7,8 @@ import logging
 import requests
 import tempfile
 import os
+import base64
+import json
 
 @bentoml.service(
     resources={"cpu": 2, "memory": "4Gi"},
@@ -16,12 +18,15 @@ class NeuralSynthModelerService:
     @bentoml.api
     def predict(
         self,
-        audio: Annotated[bytes, ContentType("audio/wav")],
+        audio: str,
     ) -> Annotated[bytes, ContentType("application/octet-stream")]:
         try:
+            # Decode base64 audio data
+            audio_data = base64.b64decode(audio)
+            
             # Create a temporary file to save the audio data
             with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_file:
-                temp_file.write(audio)
+                temp_file.write(audio_data)
                 temp_file_path = temp_file.name
             
             logging.info(f"Saved audio data to temporary file: {temp_file_path}")

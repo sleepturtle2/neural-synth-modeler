@@ -9,5 +9,8 @@
         {
             "path": "../../neural-synth-modeler-frontend"
         }
-    ]
+    ],
+    "settings": {
+        "java.compile.nullAnalysis.mode": "automatic"
+    }
 }
