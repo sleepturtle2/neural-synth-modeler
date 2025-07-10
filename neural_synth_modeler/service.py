@@ -16,6 +16,16 @@ import json
 )
 class NeuralSynthModelerService:
     @bentoml.api
+    def healthz(self) -> str:
+        """Health check endpoint for the BentoML service"""
+        try:
+            # Basic health check - service is running and can respond
+            return "ok"
+        except Exception as e:
+            logging.error(f"Health check failed: {e}")
+            raise
+
+    @bentoml.api
     def predict(
         self,
         audio: str,
