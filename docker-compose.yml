@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  model-server:
+    build: .
+    container_name: neural-synth-model-server
+    ports:
+      - "3000:3000"
+    environment:
+      BENTOML_CONFIG:
+    restart: unless-stopped 
